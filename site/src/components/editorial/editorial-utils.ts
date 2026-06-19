@@ -112,8 +112,8 @@ function decodeEntities(value: string) {
     "&lt;": "<",
     "&gt;": ">",
     "&nbsp;": " ",
-    "&ndash;": "–",
-    "&mdash;": "—",
+    "&ndash;": " to ",
+    "&mdash;": ", ",
     "&hellip;": "…",
   };
 
@@ -130,3 +130,4 @@ function titleCase(value: string) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+

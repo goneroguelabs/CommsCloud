@@ -8,7 +8,7 @@ const isProduction = process.env.VERCEL_ENV === "production";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "CommsCloud - IoT Connectivity for Africa",
+    default: "CommsCloud: IoT Connectivity for Africa",
     template: "%s | CommsCloud",
   },
   description:
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "CommsCloud",
-    title: "CommsCloud - IoT Connectivity for Africa",
+    title: "CommsCloud: IoT Connectivity for Africa",
     description:
       "Cloud Connect SIM connectivity for African IoT deployments that need carrier resilience across borders.",
     images: [{ url: "/api/og?title=CommsCloud" }],

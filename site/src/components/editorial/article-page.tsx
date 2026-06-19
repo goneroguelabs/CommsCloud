@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/layout/site-header";
 import type { MigrationRoute } from "@/lib/migration-content";
 import { ArticleCard } from "./article-card";
 import {
-  formatArticleDate,
   getArticleHtml,
   getArticleSummary,
   getCategory,
@@ -18,7 +17,6 @@ type ArticlePageProps = {
 };
 
 export function ArticlePage({ article, posts }: ArticlePageProps) {
-  const date = formatArticleDate(article.date);
   const summary = getArticleSummary(article, 260);
   const relatedPosts = getRelatedPosts(article, posts);
 
@@ -44,11 +42,6 @@ export function ArticlePage({ article, posts }: ArticlePageProps) {
                     {summary}
                   </p>
                 ) : null}
-                <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#767b84]">
-                  {date ? <time dateTime={article.date}>{date}</time> : null}
-                  {date && article.author ? <span aria-hidden="true" className="text-[#18bdb1]">/</span> : null}
-                  {article.author ? <span>By {article.author}</span> : null}
-                </div>
               </div>
 
               {article.firstImage ? (

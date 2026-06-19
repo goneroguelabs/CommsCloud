@@ -12,13 +12,31 @@ export function localizeMigratedHtml(html: string) {
     .replace(
       /\b(href|action)=("|')https?:\/\/(?:www\.)?commscloud\.com\2/gi,
       (_match, attribute: string, quote: string) => `${attribute}=${quote}/${quote}`,
+    )
+    .replace(
+      /<p>\s*(?:<a\b[^>]*>\s*)?Read\s+More\s+below\s*(?:-{2,}|&mdash;|&#8212;|\u2014)?\s*(?:-&gt;|\u2192|&gt;)?\s*(?:<\/a>)?\s*(?:<br\s*\/?>\s*)*<\/p>/gi,
+      "",
+    )
+    .replace(
+      /(?:<br\s*\/?>\s*)?Read\s+More\s+below\s*(?:-{2,}|&mdash;|&#8212;|\u2014)?\s*(?:-&gt;|\u2192|&gt;)?\s*(?:<br\s*\/?>\s*)*/gi,
+      "",
     );
 }
 
 export const migrationRoutes = migrationData.routes.map((route) => ({
   ...route,
+  description: cleanMigratedSummary(route.description),
+  excerptHtml: cleanMigratedSummary(route.excerptHtml),
+  contentTextPreview: cleanMigratedSummary(route.contentTextPreview),
   contentHtml: localizeMigratedHtml(route.contentHtml),
 }));
+
+function cleanMigratedSummary(value: string) {
+  return value
+    .replace(/\s*Read\s+More\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export function normalizePath(path: string) {
   const clean = path.startsWith("/") ? path : `/${path}`;

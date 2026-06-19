@@ -51,10 +51,16 @@ html {
   font-size: 80%;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 body {
   overflow-x: clip;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 ::selection {
@@ -330,9 +336,12 @@ button {
   background:
     linear-gradient(90deg, transparent, rgb(245 166 35 / 18%), transparent),
     linear-gradient(90deg, rgb(27 42 74 / 8%) 1px, transparent 1px);
+  background-position:
+    0 0,
+    0 0;
   background-size:
     100% 100%,
-    78px 78px;
+    76px 76px;
   content: "";
   inset: 0;
   opacity: 0.42;
@@ -1377,20 +1386,20 @@ button {
   align-items: center;
   color: #18bdb1;
   display: inline-flex;
-  height: 3.75rem;
+  height: 2.35rem;
   justify-content: center;
   overflow: visible;
-  width: 3.75rem;
+  width: 2.35rem;
 }
 
 .mega-menu-icon svg,
 .mega-menu-icon-image {
   display: block;
-  height: 3rem;
+  height: 2.1rem;
   max-width: none;
   object-fit: contain;
   overflow: visible;
-  width: 3rem;
+  width: 2.1rem;
 }
 
 .icon-line,
@@ -1425,7 +1434,8 @@ button {
     linear-gradient(90deg, rgb(27 42 74 / 5%) 1px, transparent 1px),
     radial-gradient(circle at 84% 9%, rgb(185 180 201 / 30%), transparent 24rem),
     linear-gradient(180deg, #ffffff 0%, #ffffff 48%, rgb(185 180 201 / 12%) 100%);
-  background-size: 78px 100%, auto, auto;
+  background-position: left top, center top, center top;
+  background-size: 76px 100%, auto, auto;
   color: var(--brand-navy);
   min-height: 100dvh;
   overflow: hidden;
@@ -1506,17 +1516,24 @@ button {
 
 .coverage-map-panel {
   background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+  border: 1px solid rgb(185 180 201 / 58%);
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgb(27 42 74 / 8%);
   margin: 0 auto;
-  max-width: min(90rem, calc(100vw - 2rem));
-  overflow: visible;
+  max-width: 82rem;
+  overflow: hidden;
+  padding: 1.25rem 1.5rem 1rem;
   position: relative;
 }
 
 .coverage-map-heading {
-  display: none;
+  align-items: start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  min-height: 4rem;
+  position: relative;
+  z-index: 2;
 }
 
 .coverage-map-heading p {
@@ -1528,7 +1545,7 @@ button {
 }
 
 .coverage-map-heading span {
-  color: rgb(255 255 255 / 70%);
+  color: var(--brand-muted);
   font-size: 0.9rem;
   line-height: 1.45;
   max-width: 35rem;
@@ -1536,16 +1553,14 @@ button {
 }
 
 .coverage-map-stage {
-  aspect-ratio: 16 / 9;
-  background:
-    radial-gradient(circle at 50% 46%, rgb(245 166 35 / 13%), transparent 26rem),
-    linear-gradient(180deg, rgb(185 180 201 / 22%), rgb(185 180 201 / 10%));
-  border: 1px solid rgb(185 180 201 / 48%);
-  border-radius: 8px;
-  box-shadow: 0 24px 80px rgb(27 42 74 / 8%);
+  aspect-ratio: 16 / 7.8;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   height: auto;
-  max-height: 46rem;
-  min-height: 32rem;
+  max-height: none;
+  min-height: 0;
   overflow: hidden;
   position: relative;
 }
@@ -1566,7 +1581,7 @@ button {
 
 .coverage-land-country {
   cursor: pointer;
-  stroke: rgb(27 42 74 / 28%);
+  stroke: rgb(97 90 132 / 30%);
   stroke-width: 0.42;
   transition:
     fill 220ms ease,
@@ -1577,12 +1592,12 @@ button {
 }
 
 .coverage-land-country.is-covered {
-  fill: var(--brand-gold);
+  fill: var(--brand-mist);
 }
 
 .coverage-land-country.is-limited {
   fill: var(--brand-slate);
-  opacity: 0.86;
+  opacity: 0.8;
 }
 
 .coverage-land-country:hover,
@@ -1592,40 +1607,6 @@ button {
   outline: none;
   stroke: rgb(27 42 74 / 42%);
   stroke-width: 0.75;
-}
-
-.coverage-map-controls {
-  display: grid;
-  gap: 0.7rem;
-  left: 1.2rem;
-  position: absolute;
-  top: 1.2rem;
-  z-index: 4;
-}
-
-.coverage-map-controls button {
-  align-items: center;
-  background: var(--brand-navy);
-  border: 1px solid rgb(27 42 74 / 12%);
-  border-radius: 4px;
-  color: white;
-  display: inline-flex;
-  font-size: 1.35rem;
-  font-weight: 800;
-  height: 3.35rem;
-  justify-content: center;
-  transition:
-    background-color 180ms ease,
-    transform 180ms ease;
-  width: 3.35rem;
-}
-
-.coverage-map-controls button:hover,
-.coverage-map-controls button:focus-visible {
-  background: var(--brand-gold);
-  color: var(--brand-navy);
-  outline: none;
-  transform: translateY(-1px);
 }
 
 .coverage-map-tooltip {
@@ -1667,55 +1648,12 @@ button {
   margin-top: 0.18rem;
 }
 
-.coverage-map-tech {
-  align-items: center;
-  bottom: 1.2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem 1.25rem;
-  left: 1.2rem;
-  max-width: min(30rem, calc(100% - 2.4rem));
-  position: absolute;
-  z-index: 4;
-}
-
-.coverage-map-tech label {
-  align-items: center;
-  color: var(--brand-navy);
-  cursor: pointer;
-  display: inline-flex;
-  font-size: 1rem;
-  font-weight: 700;
-  gap: 0.55rem;
-}
-
-.coverage-map-tech input {
-  appearance: none;
-  background: white;
-  border: 1px solid rgb(97 90 132 / 42%);
-  border-radius: 4px;
-  height: 1.5rem;
-  width: 1.5rem;
-}
-
-.coverage-map-tech input:checked {
-  background:
-    linear-gradient(var(--brand-gold), var(--brand-gold)) center / 0.72rem 0.72rem no-repeat,
-    rgb(245 166 35 / 18%);
-  border-color: var(--brand-gold);
-}
-
-.coverage-map-tech input:focus-visible {
-  outline: 2px solid var(--brand-gold);
-  outline-offset: 3px;
-}
-
 .coverage-map-legend {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: flex-end;
-  padding: 0.75rem 0 0;
+  padding: 0.2rem 0 0;
   position: relative;
   z-index: 3;
 }
@@ -1748,14 +1686,14 @@ button {
 .coverage-toolbar p,
 .coverage-toolbar label span {
   color: var(--brand-navy);
-  font-size: 0.86rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
 .coverage-tech-filters {
   align-items: center;
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: space-between;
 }
 
@@ -1765,11 +1703,16 @@ button {
   gap: 0.7rem;
 }
 
+.coverage-tech-filters > div:first-child {
+  display: grid;
+  gap: 0.18rem;
+}
+
 .coverage-tech-filters label {
   align-items: center;
   color: var(--brand-muted);
   display: inline-flex;
-  font-size: 0.86rem;
+  font-size: 0.78rem;
   font-weight: 700;
   gap: 0.48rem;
   min-height: 2rem;
@@ -1795,8 +1738,7 @@ button {
 .coverage-tech-filters input:focus-visible,
 .coverage-toolbar input:focus-visible,
 .coverage-toggle button:focus-visible,
-.coverage-clear:focus-visible,
-.coverage-download:focus-visible {
+.coverage-clear:focus-visible {
   outline: 2px solid #b9b4c9;
   outline-offset: 3px;
 }
@@ -1808,23 +1750,23 @@ button {
 .coverage-console {
   margin: 0 auto;
   max-width: 82rem;
-  padding: clamp(2rem, 4vw, 3.5rem) 2rem 5rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) 2rem 5rem;
 }
 
 .coverage-filter-card {
-  background: white;
-  border: 1px solid rgb(185 180 201 / 58%);
+  background: rgb(255 255 255 / 74%);
+  border: 1px solid rgb(185 180 201 / 42%);
   border-radius: 8px;
-  box-shadow: 0 18px 60px rgb(27 42 74 / 7%);
-  padding: clamp(1.1rem, 2vw, 1.45rem);
+  box-shadow: none;
+  padding: 1rem 1.1rem;
 }
 
 .coverage-toolbar {
   align-items: end;
   display: grid;
-  gap: 0.9rem;
-  grid-template-columns: minmax(12rem, 17rem) minmax(18rem, 1fr) auto auto;
-  margin-top: 1rem;
+  gap: 0.85rem;
+  grid-template-columns: minmax(13rem, 18rem) minmax(18rem, 1fr) auto;
+  margin-top: 0.75rem;
 }
 
 .coverage-toggle {
@@ -1862,15 +1804,15 @@ button {
 
 .coverage-toolbar label {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.38rem;
 }
 
 .coverage-toolbar input {
-  background: rgb(185 180 201 / 10%);
-  border: 1px solid rgb(185 180 201 / 70%);
+  background: white;
+  border: 1px solid rgb(185 180 201 / 62%);
   border-radius: 8px;
   color: var(--brand-navy);
-  min-height: 2.75rem;
+  min-height: 2.6rem;
   padding: 0 1rem;
 }
 
@@ -1881,64 +1823,40 @@ button {
 .coverage-clear {
   color: var(--brand-lavender);
   font-weight: 800;
-  min-height: 2.75rem;
+  min-height: 2.6rem;
   text-align: left;
 }
 
-.coverage-download {
-  align-items: center;
-  background: var(--brand-navy);
-  border: 2px solid var(--brand-navy);
-  border-radius: 999px;
-  color: white;
-  display: inline-flex;
-  font-weight: 800;
-  justify-content: center;
-  min-height: 2.8rem;
-  padding: 0 1.3rem;
-  transition:
-    background-color 180ms ease,
-    transform 180ms ease;
-}
-
-.coverage-download:hover {
-  background: var(--brand-lavender);
-  border-color: var(--brand-lavender);
-  color: var(--brand-navy);
-  transform: translateY(-1px);
-}
-
 .coverage-table-wrap {
-  border-radius: 8px;
-  margin-top: 1.35rem;
+  border-top: 1px solid rgb(185 180 201 / 54%);
+  margin-top: 1.55rem;
   overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
 .coverage-table {
-  border-collapse: separate;
-  border-spacing: 0 0.35rem;
+  border-collapse: collapse;
   min-width: 70rem;
   width: 100%;
 }
 
 .coverage-table th {
   color: var(--brand-lavender);
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 0.65rem 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 1rem 0.8rem 0.8rem;
   text-align: left;
   text-transform: uppercase;
 }
 
 .coverage-table td {
-  background: white;
-  border-block: 1px solid transparent;
+  background: transparent;
+  border-top: 1px solid rgb(185 180 201 / 36%);
   color: var(--brand-navy);
   font-size: 0.82rem;
   font-weight: 700;
-  padding: 0.86rem 0.8rem;
+  padding: 0.9rem 0.8rem;
 }
 
 .coverage-table td:first-child {
@@ -1948,9 +1866,9 @@ button {
 }
 
 .coverage-code {
-  background: var(--brand-mist);
-  border-radius: 0.32rem;
-  color: var(--brand-navy);
+  background: rgb(185 180 201 / 45%);
+  border-radius: 0.25rem;
+  color: var(--brand-lavender);
   display: inline-flex;
   font-family: var(--font-mono), Consolas, monospace;
   font-size: 0.72rem;
@@ -1961,19 +1879,19 @@ button {
 
 .coverage-row-marker {
   align-items: center;
-  background: white;
-  border: 1px solid var(--brand-lavender);
-  border-radius: 0.45rem;
-  color: white;
+  background: transparent;
+  border: 1px solid rgb(97 90 132 / 52%);
+  border-radius: 0.32rem;
+  color: var(--brand-navy);
   cursor: pointer;
   display: inline-flex;
-  height: 2rem;
+  height: 1.7rem;
   justify-content: center;
   transition:
     background-color 180ms ease,
     border-color 180ms ease,
     transform 180ms ease;
-  width: 2rem;
+  width: 1.7rem;
 }
 
 .coverage-row-marker span {
@@ -1989,7 +1907,7 @@ button {
 .coverage-row-marker:hover,
 .coverage-row-marker[aria-expanded="true"] {
   background: var(--brand-navy);
-  border-color: #b9b4c9;
+  border-color: var(--brand-navy);
 }
 
 .coverage-row-marker:hover span,
@@ -2007,27 +1925,43 @@ button {
 }
 
 .coverage-data-row.is-expanded td {
-  border-color: rgb(97 90 132 / 30%);
+  border-color: rgb(97 90 132 / 44%);
 }
 
 .coverage-detail-row td,
 .coverage-detail-row td:first-child {
   background: transparent;
   border: 0;
-  padding: 0 0 0.55rem;
+  padding: 0;
   width: auto;
+}
+
+.coverage-detail-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    grid-template-rows 240ms ease,
+    opacity 180ms ease;
+}
+
+.coverage-detail-row.is-expanded .coverage-detail-reveal {
+  grid-template-rows: 1fr;
+  opacity: 1;
 }
 
 .coverage-detail-panel {
   background:
-    linear-gradient(135deg, rgb(185 180 201 / 20%), transparent 34%),
-    white;
-  border: 1px solid rgb(185 180 201 / 50%);
+    linear-gradient(135deg, rgb(185 180 201 / 12%), transparent 34%),
+    rgb(255 255 255 / 72%);
+  border: 1px solid rgb(185 180 201 / 42%);
   border-radius: 8px;
   display: grid;
   gap: 0.85rem;
   grid-template-columns: repeat(5, minmax(8rem, 1fr));
-  margin-left: 3.25rem;
+  margin: 0 0 0.85rem 3.05rem;
+  min-height: 0;
   padding: 1rem;
 }
 
@@ -2253,18 +2187,15 @@ button {
   }
 
   .coverage-map-stage {
-  aspect-ratio: 16 / 9;
-  background:
-    radial-gradient(circle at 50% 46%, rgb(245 166 35 / 13%), transparent 26rem),
-    linear-gradient(180deg, rgb(185 180 201 / 22%), rgb(185 180 201 / 10%));
-  border: 1px solid rgb(185 180 201 / 48%);
-  border-radius: 8px;
-  box-shadow: 0 24px 80px rgb(27 42 74 / 8%);
-  height: auto;
-  max-height: 46rem;
-  min-height: 32rem;
-  overflow: hidden;
-  position: relative;
+    aspect-ratio: 4 / 3;
+    max-height: none;
+    min-height: 20rem;
+  }
+
+  .coverage-map-tooltip {
+    min-width: 13rem;
+    padding: 1rem;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1100px) {

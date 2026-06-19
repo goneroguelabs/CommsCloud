@@ -96,52 +96,14 @@ export function CoverageExplorer({ rows }: { rows: CoverageRow[] }) {
     );
   }
 
-  function downloadCsv() {
-    const header = [
-      "MCC/MNC",
-      "PLMN",
-      "Country/Territory",
-      "Region",
-      "Network",
-      "IMSI Providers",
-      "2G",
-      "3G",
-      "LTE",
-      "5G",
-      "LTE-M",
-      "NB-IOT",
-    ];
-    const body = filteredRows.map((row) => [
-      row.mccmnc,
-      row.plmn,
-      row.country,
-      row.region,
-      row.operator,
-      row.imsiProviders.join("; "),
-      formatTech(row.tech.twoG),
-      formatTech(row.tech.threeG),
-      formatTech(row.tech.lte),
-      formatTech(row.tech.fiveG),
-      formatTech(row.tech.lteM),
-      formatTech(row.tech.nbIot),
-    ]);
-    const csv = [header, ...body]
-      .map((line) => line.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(","))
-      .join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = "commscloud-coverage-profiles.csv";
-    anchor.click();
-    URL.revokeObjectURL(url);
-  }
-
   return (
     <section className="coverage-console" aria-label="Network coverage table">
       <div className="coverage-filter-card">
         <div className="coverage-tech-filters" aria-label="Data filters">
-          <p>Data filters</p>
+          <div>
+            <p>Data filters</p>
+            <span>{filteredRows.length} matching profiles</span>
+          </div>
           <div>
             {techFilters.map((filter) => (
               <label key={filter.key}>
@@ -184,9 +146,6 @@ export function CoverageExplorer({ rows }: { rows: CoverageRow[] }) {
           <button className="coverage-clear" onClick={clearFilters} type="button">
             Clear filters
           </button>
-          <button className="coverage-download" onClick={downloadCsv} type="button">
-            Download network list
-          </button>
         </div>
       </div>
 
@@ -216,14 +175,6 @@ export function CoverageExplorer({ rows }: { rows: CoverageRow[] }) {
                         aria-label={`${isExpanded ? "Hide" : "Show"} details for ${row.operator}`}
                         className="coverage-row-marker"
                         onClick={() => toggleRow(currentRowKey)}
-                        onMouseEnter={() => setExpandedRows([currentRowKey])}
-                        onMouseLeave={() => setExpandedRows((current) =>
-                          current.includes(currentRowKey) ? [] : current,
-                        )}
-                        onFocus={() => setExpandedRows([currentRowKey])}
-                        onBlur={() => setExpandedRows((current) =>
-                          current.includes(currentRowKey) ? [] : current,
-                        )}
                         type="button"
                       >
                         <span aria-hidden="true" />
@@ -237,9 +188,9 @@ export function CoverageExplorer({ rows }: { rows: CoverageRow[] }) {
                     <td>{row.operator}</td>
                     <td>{renderTechBadges(row)}</td>
                   </tr>
-                  {isExpanded ? (
-                    <tr className="coverage-detail-row">
-                      <td colSpan={6}>
+                  <tr className={`coverage-detail-row${isExpanded ? " is-expanded" : ""}`}>
+                    <td colSpan={6}>
+                      <div className="coverage-detail-reveal" aria-hidden={!isExpanded}>
                         <div className="coverage-detail-panel">
                           <div>
                             <span>PLMN</span>
@@ -266,9 +217,9 @@ export function CoverageExplorer({ rows }: { rows: CoverageRow[] }) {
                             <strong>{availableTech(row)}</strong>
                           </div>
                         </div>
-                      </td>
-                    </tr>
-                  ) : null}
+                      </div>
+                    </td>
+                  </tr>
                 </Fragment>
               );
             })}
@@ -326,10 +277,6 @@ export function CoverageExplorer({ rows }: { rows: CoverageRow[] }) {
 
 function rowKey(row: CoverageRow) {
   return row.id;
-}
-
-function formatTech(value: boolean) {
-  return value ? "Yes" : "";
 }
 
 function availableTech(row: CoverageRow) {

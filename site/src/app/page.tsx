@@ -25,13 +25,13 @@ export const metadata: Metadata = {
 const heroSlides = [
   {
     title: "Built for IoT. Designed for You.",
-    body: "View signalling events, apply policies, troubleshoot devices, suspend SIMs - all in one place. RESTful APIs make integration with your platform seamless.",
+    body: "View signalling events, apply policies, troubleshoot devices, suspend SIMs, all in one place. RESTful APIs make integration with your platform seamless.",
     href: "/connectivity-management-portal/",
     cta: "Explore CMP features",
   },
   {
     title: "One SIM. Any Format. Anywhere.",
-    body: "Plastic, eSIM, iSIM - ready for any device or deployment. From dashcams in DRC to smart meters in Kenya - one SKU simplifies it all.",
+    body: "Plastic, eSIM, iSIM, ready for any device or deployment. From dashcams in DRC to smart meters in Kenya, one SKU simplifies it all.",
     href: "/the-best-iot-sim-card/cloud-connect-sim-card/",
     cta: "Learn more",
   },

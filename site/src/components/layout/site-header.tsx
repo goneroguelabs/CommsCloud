@@ -225,7 +225,7 @@ export function SiteHeader() {
     <header className="site-header sticky top-0 z-40 border-b border-brand-line/40 bg-[#f5f6f8]/95 backdrop-blur-xl">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex h-24 max-w-[1240px] items-center gap-6 px-5 md:px-8"
+        className="mx-auto flex h-24 max-w-[82rem] items-center gap-6 px-5 md:px-8"
       >
         <Link href="/" className="flex shrink-0 items-center">
           <span className="sr-only">CommsCloud home</span>
@@ -303,35 +303,35 @@ function MegaMenu({ item }: { item: NavigationItem }) {
   return (
     <div className="pointer-events-none fixed inset-x-0 top-24 z-50 translate-y-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
       <div className="border-t border-brand-line/30 bg-white shadow-[0_24px_44px_rgba(21,28,100,0.08)]">
-        <div className="mx-auto grid max-w-[1480px] grid-cols-[330px_1fr_300px] gap-12 px-5 py-11 md:px-8">
+        <div className="mx-auto grid max-w-[82rem] grid-cols-[220px_1fr_200px] gap-9 px-5 py-10 md:px-8">
           <div>
-            <h2 className="text-[2.45rem] font-medium tracking-[-0.04em] text-[#18bdb1]">
+            <h2 className="text-[2.15rem] font-medium tracking-[-0.04em] text-[#18bdb1]">
               {item.intro.title}
             </h2>
-            <p className="mt-4 max-w-[25rem] text-[1.18rem] leading-7 text-[#243b4a]">
+            <p className="mt-4 max-w-[22rem] text-[1.08rem] leading-7 text-[#243b4a]">
               {item.intro.body}
             </p>
           </div>
 
-          <div className="grid gap-x-14 gap-y-10" style={{ gridTemplateColumns: `repeat(${Math.min(item.sections.length, 3)}, minmax(0, 1fr))` }}>
+          <div className="grid items-start gap-x-8 gap-y-10" style={{ gridTemplateColumns: `repeat(${Math.min(item.sections.length, 3)}, minmax(0, 1fr))` }}>
             {item.sections.map((section) => (
-              <div key={section.title}>
-                <p className="mb-7 text-base font-semibold text-[#18bdb1]">{section.title}</p>
-                <div className="grid gap-6">
+              <div key={section.title} className="grid content-start">
+                <p className="h-5 text-base font-semibold leading-5 text-[#18bdb1]">{section.title}</p>
+                <div className="mt-7 grid gap-4">
                   {section.items.map((menuItem) => (
                     <Link
                       key={menuItem.href}
                       href={menuItem.href}
-                      className="group/item grid grid-cols-[3.75rem_1fr] items-start gap-4 text-[#102b3a] transition hover:text-[#18bdb1]"
+                      className="group/item grid grid-cols-[2.35rem_1fr] items-start gap-3 rounded-md py-1 text-[#102b3a] transition hover:text-[#18bdb1]"
                     >
                       <span className="mega-menu-icon text-[#18bdb1]">
                         <MegaMenuIcon name={menuItem.icon} />
                       </span>
                       <span>
-                        <span className="block text-[1.08rem] font-semibold leading-6">
+                        <span className="block text-[1rem] font-semibold leading-5">
                           {menuItem.label}
                         </span>
-                        <span className="mt-1 block text-sm font-normal leading-6 text-[#5d6a75]">
+                        <span className="mt-1 block max-w-[16rem] text-[0.9rem] font-normal leading-5 text-[#5d6a75]">
                           {menuItem.description}
                         </span>
                       </span>
@@ -342,7 +342,7 @@ function MegaMenu({ item }: { item: NavigationItem }) {
             ))}
           </div>
 
-          <aside className="-my-11 bg-[#f5f6f8] px-9 py-11">
+          <aside className="-my-10 bg-[#f5f6f8] px-7 py-10">
             <p className="mb-7 text-base font-semibold text-[#18bdb1]">{item.aside.title}</p>
             <div className="grid gap-6">
               {item.aside.items.map((asideItem) => (

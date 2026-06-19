@@ -75,7 +75,7 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-white px-5 py-20 text-[#1e2428] md:px-8">
+    <footer className="border-t border-[#d8d6e1] bg-white px-5 py-20 text-[#1e2428] md:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-14 lg:grid-cols-[1.05fr_1.65fr]">
           <div>
@@ -132,7 +132,7 @@ export function SiteFooter() {
 
         <div className="mt-20 border-t border-[#e5e7eb] pt-10">
           <div className="flex flex-col gap-5 text-lg text-[#8b9298] md:flex-row md:items-center md:justify-between">
-            <p>Copyright CommsCloud - Cape Town, South Africa</p>
+            <p>Copyright CommsCloud, Cape Town, South Africa</p>
             <div className="flex flex-wrap gap-x-4 gap-y-2">
               {legalLinks.map((item, index) => (
                 <span key={item.href} className="inline-flex items-center gap-4">

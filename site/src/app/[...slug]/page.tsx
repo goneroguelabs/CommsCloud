@@ -80,19 +80,14 @@ export default async function MigrationPage({ params, searchParams }: RoutePageP
         headline: route.title,
         description: route.description,
         url,
-        datePublished: route.date || undefined,
-        dateModified: route.modified || undefined,
-        authorName: route.author || undefined,
         image: route.firstImage || undefined,
       })
     : createWebPageSchema({
         name: route.title,
         description: route.description,
         url,
-        datePublished: route.date || undefined,
-        dateModified: route.modified || undefined,
       });
-  const routeSchemas = importedSchemas(route);
+  const routeSchemas = importedSchemas(route).map(stripDateAuthorMetadata);
   const schemas = routeSchemas.length ? routeSchemas : [schema];
 
   const posts = migrationRoutes.filter(isEditorialArticle);
@@ -164,4 +159,32 @@ export default async function MigrationPage({ params, searchParams }: RoutePageP
 
 function firstQueryValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
+}
+
+function stripDateAuthorMetadata<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(stripDateAuthorMetadata) as T;
+  }
+
+  if (!value || typeof value !== "object") {
+    return value;
+  }
+
+  const cleaned: Record<string, unknown> = {};
+
+  for (const [key, entry] of Object.entries(value)) {
+    if (
+      key === "author" ||
+      key === "datePublished" ||
+      key === "dateModified" ||
+      key === "dateCreated" ||
+      key === "publisher"
+    ) {
+      continue;
+    }
+
+    cleaned[key] = stripDateAuthorMetadata(entry);
+  }
+
+  return cleaned as T;
 }

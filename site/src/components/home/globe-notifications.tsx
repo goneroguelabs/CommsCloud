@@ -12,11 +12,13 @@ type GlobeEvent = {
 };
 
 type VisibleGlobeEvent = GlobeEvent & {
-  position: {
-    x: number;
-    y: number;
-    origin: string;
-  };
+  position: GlobeNotificationPosition;
+};
+
+type GlobeNotificationPosition = {
+  x: number;
+  y: number;
+  origin: string;
 };
 
 const EVENTS: readonly GlobeEvent[] = [
@@ -44,7 +46,7 @@ const MOBILE_POSITIONS = [
 ] as const;
 
 function pickPosition(
-  usedPositions: readonly (typeof DESKTOP_POSITIONS[number] | typeof MOBILE_POSITIONS[number])[],
+  usedPositions: readonly GlobeNotificationPosition[],
   isMobile: boolean,
 ) {
   const positions = isMobile ? MOBILE_POSITIONS : DESKTOP_POSITIONS;
@@ -60,13 +62,16 @@ function pickPosition(
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-function pickEvents(previousIds: readonly string[]): VisibleGlobeEvent[] {
+function pickEvents(
+  previousIds: readonly string[],
+  previousPositions: readonly VisibleGlobeEvent["position"][],
+): VisibleGlobeEvent[] {
   const available = EVENTS.filter((event) => !previousIds.includes(event.id));
   const pool = available.length >= 2 ? available : [...EVENTS];
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
   const isMobile = window.matchMedia("(max-width: 767px)").matches;
   const count = isMobile ? 1 : Math.random() < 0.5 ? 1 : 2;
-  const usedPositions: ReturnType<typeof pickPosition>[] = [];
+  const usedPositions: GlobeNotificationPosition[] = [...previousPositions];
 
   return shuffled.slice(0, count).map((event) => {
     const position = pickPosition(usedPositions, isMobile);
@@ -85,7 +90,12 @@ export function GlobeNotifications() {
     let timeout = 0;
     const schedule = () => {
       timeout = window.setTimeout(() => {
-        setVisibleEvents((current) => pickEvents(current.map((event) => event.id)));
+        setVisibleEvents((current) =>
+          pickEvents(
+            current.map((event) => event.id),
+            current.map((event) => event.position),
+          ),
+        );
         setCycle((current) => current + 1);
         schedule();
       }, 4000 + Math.random() * 1000);

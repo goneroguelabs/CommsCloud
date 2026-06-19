@@ -141,9 +141,9 @@ export default function ContactPage() {
                   Deployment size*
                   <select className={inputClassName} name="deployment-size" defaultValue="" required>
                     <option value="" disabled>Select device volume</option>
-                    <option value="1-100">1–100 devices</option>
-                    <option value="101-1000">101–1,000 devices</option>
-                    <option value="1001-10000">1,001–10,000 devices</option>
+                    <option value="1-100">1 to 100 devices</option>
+                    <option value="101-1000">101 to 1,000 devices</option>
+                    <option value="1001-10000">1,001 to 10,000 devices</option>
                     <option value="10000+">10,000+ devices</option>
                   </select>
                 </label>

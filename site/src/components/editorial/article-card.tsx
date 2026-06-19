@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import type { MigrationRoute } from "@/lib/migration-content";
 import {
-  formatArticleDate,
   getArticleSummary,
   getCategory,
 } from "./editorial-utils";
@@ -13,7 +12,6 @@ type ArticleCardProps = {
 };
 
 export function ArticleCard({ article, compact = false }: ArticleCardProps) {
-  const date = formatArticleDate(article.date);
   const summary = getArticleSummary(article, compact ? 125 : 175);
 
   return (
@@ -38,8 +36,6 @@ export function ArticleCard({ article, compact = false }: ArticleCardProps) {
       <div className={`flex flex-1 flex-col ${compact ? "p-6" : "p-7 md:p-8"}`}>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[#707684]">
           <span>{getCategory(article)}</span>
-          {date ? <span aria-hidden="true" className="text-[#18bdb1]">/</span> : null}
-          {date ? <time dateTime={article.date}>{date}</time> : null}
         </div>
 
         <h3 className={`${compact ? "mt-4 text-2xl" : "mt-5 text-[2rem]"} font-semibold leading-[1.12] tracking-[-0.035em]`}>
