@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { CoverageExplorer, type CoverageRow } from "@/components/coverage/coverage-explorer";
+import {
+  WorldCoverageMap,
+  type CoverageMapFeature,
+} from "@/components/coverage/world-coverage-map";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import countriesGeo from "@/data/coverage/countries.geo.json";
@@ -19,14 +23,8 @@ type CountryFeature = {
   };
 };
 
-const mapFeatures = (countriesGeo as unknown as { features: CountryFeature[] })
-  .features
-  .filter((feature) => feature.properties.name !== "Antarctica")
-  .map((feature) => ({
-    id: feature.id ?? feature.properties.name,
-    name: feature.properties.name,
-    path: geometryToPath(feature.geometry),
-  }));
+const mapWidth = 1200;
+const mapHeight = 675;
 
 const mutedCountries = new Set([
   "Greenland",
@@ -37,6 +35,27 @@ const mutedCountries = new Set([
 ]);
 
 const coverageRows = networkCoverageRows as CoverageRow[];
+
+const techLabels = [
+  ["twoG", "2G"],
+  ["threeG", "3G"],
+  ["lte", "LTE"],
+  ["fiveG", "5G"],
+  ["lteM", "LTE-M"],
+  ["nbIot", "NB-IOT"],
+] as const;
+
+const countryCoverage = buildCountryCoverage(coverageRows);
+
+const mapFeatures = (countriesGeo as unknown as { features: CountryFeature[] })
+  .features
+  .filter((feature) => feature.properties.name !== "Antarctica")
+  .map((feature) => ({
+    id: feature.id ?? feature.properties.name,
+    name: feature.properties.name,
+    path: geometryToPath(feature.geometry),
+    ...getCountryCoverage(feature.properties.name),
+  })) satisfies CoverageMapFeature[];
 
 const stats = [
   ["650+", "mobile network operators"],
@@ -86,7 +105,7 @@ export default function CoverageMapPage() {
               footprint. Muted regions show limited or conditional availability.
             </span>
           </div>
-          <WorldCoverageMap />
+          <WorldCoverageMap features={mapFeatures} />
           <div className="coverage-map-legend" aria-hidden="true">
             <span className="is-covered">Coverage footprint</span>
             <span className="is-limited">Limited or conditional</span>
@@ -97,54 +116,6 @@ export default function CoverageMapPage() {
       </main>
       <SiteFooter />
     </div>
-  );
-}
-
-function WorldCoverageMap() {
-  return (
-    <svg
-      className="coverage-world"
-      viewBox="0 0 1200 560"
-      role="img"
-      aria-label="CommsCloud country coverage map"
-    >
-      <defs>
-        <filter id="coverageSoftShadow">
-          <feDropShadow dx="0" dy="8" stdDeviation="5" floodOpacity="0.18" />
-        </filter>
-      </defs>
-      <g className="coverage-grid-lines">
-        {Array.from({ length: 11 }, (_, index) => (
-          <path
-            key={`v-${index}`}
-            d={`M${80 + index * 104} 0V560`}
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-        {Array.from({ length: 6 }, (_, index) => (
-          <path
-            key={`h-${index}`}
-            d={`M0 ${64 + index * 88}H1200`}
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-      </g>
-      <g className="coverage-land" filter="url(#coverageSoftShadow)">
-        {mapFeatures.map((feature) => (
-          <path
-            key={feature.id}
-            className={
-              mutedCountries.has(feature.name)
-                ? "coverage-land-country coverage-land-muted"
-                : "coverage-land-country"
-            }
-            d={feature.path}
-          >
-            <title>{feature.name}</title>
-          </path>
-        ))}
-      </g>
-    </svg>
   );
 }
 
@@ -173,7 +144,78 @@ function polygonToPath(polygon: Polygon) {
 }
 
 function project(longitude: number, latitude: number) {
-  const x = ((longitude + 180) / 360) * 1200;
-  const y = ((90 - latitude) / 180) * 560;
+  const clampedLatitude = Math.max(-84.5, Math.min(84.5, latitude));
+  const latitudeRadians = (clampedLatitude * Math.PI) / 180;
+  const mercatorY =
+    (1 - Math.log(Math.tan(latitudeRadians) + 1 / Math.cos(latitudeRadians)) / Math.PI) / 2;
+  const x = ((longitude + 180) / 360) * mapWidth;
+  const y = mercatorY * mapHeight;
   return [x, y] as const;
+}
+
+function buildCountryCoverage(rows: CoverageRow[]) {
+  const coverage = new Map<
+    string,
+    {
+      technologies: Set<string>;
+      networks: Set<string>;
+    }
+  >();
+
+  for (const row of rows) {
+    if (row.blocked) continue;
+
+    const key = normalizeCountryName(row.country);
+    const current =
+      coverage.get(key) ??
+      {
+        technologies: new Set<string>(),
+        networks: new Set<string>(),
+      };
+
+    for (const [techKey, label] of techLabels) {
+      if (row.tech[techKey]) {
+        current.technologies.add(label);
+      }
+    }
+
+    current.networks.add(`${row.mccmnc}:${row.operator}`);
+    coverage.set(key, current);
+  }
+
+  return coverage;
+}
+
+function getCountryCoverage(countryName: string) {
+  const summary = countryCoverage.get(normalizeCountryName(countryName));
+
+  return {
+    technologies: summary ? Array.from(summary.technologies) : [],
+    networkCount: summary?.networks.size ?? 0,
+    limited: mutedCountries.has(countryName) || !summary,
+  };
+}
+
+function normalizeCountryName(name: string) {
+  const aliases: Record<string, string> = {
+    congo: "republic of the congo",
+    "congo drc": "democratic republic of the congo",
+    "democratic republic of congo": "democratic republic of the congo",
+    "falkland islands malvinas": "falkland islands",
+    "french guyana": "french guiana",
+    "republic of serbia": "serbia",
+    swaziland: "eswatini",
+    "the bahamas": "bahamas",
+    tanzania: "united republic of tanzania",
+    "united states": "united states of america",
+    uzbekistan: "uzbekistan",
+  };
+
+  const cleaned = name
+    .toLowerCase()
+    .replaceAll("&", " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+  return (aliases[cleaned] ?? cleaned).replace(/[^a-z0-9]/g, "");
 }
