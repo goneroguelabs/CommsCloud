@@ -1,0 +1,36 @@
+{
+  "name": "site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "import:wp": "node scripts/import-wordpress-export.mjs",
+    "qa:routes": "node scripts/qa-routes.mjs",
+    "qa:redirects": "node --experimental-strip-types scripts/validate-redirects.mjs",
+    "qa:tracking": "node --experimental-strip-types scripts/validate-tracking-data.mjs",
+    "check:brand": "node scripts/check-forbidden-terms.mjs",
+    "check:built": "node scripts/check-built-content.mjs",
+    "qa:built-routes": "node scripts/check-built-routes.mjs",
+    "lhci": "lhci autorun",
+    "qa:staging": "node scripts/qa-staging.mjs"
+  },
+  "dependencies": {
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "@lhci/cli": "^0.15.1",
+    "typescript": "^5"
+  }
+}

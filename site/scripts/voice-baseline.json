@@ -1,0 +1,15 @@
+{
+  "source": {
+    "seamless": 159,
+    "ecosystem": 72,
+    "synergy": 3,
+    "holistic": 6
+  },
+  "built": {
+    "seamless": 689,
+    "ecosystem": 380,
+    "synergy": 5,
+    "holistic": 20
+  },
+  "note": "Legacy phrase baseline. Lower these counts after editorial cleanup; the gate fails on new increases."
+}

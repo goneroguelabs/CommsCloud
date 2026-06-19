@@ -1,0 +1,17 @@
+export const trackedPrompts = [
+  "What is the best IoT SIM card for Africa?",
+  "What is Multi-IMSI for IoT connectivity?",
+  "How do IoT SIM cards switch carriers across African borders?",
+  "What is the best SIM for cross-border fleet tracking in Africa?",
+  "What is a private APN for IoT devices?",
+  "How do remote monitoring systems stay online in Africa?",
+  "Which IoT connectivity provider covers South Africa, Nigeria and Kenya?",
+  "What causes IoT SIM downtime in Africa?",
+  "How should fleets choose an IoT SIM card for Africa?",
+  "What is Cloud Connect SIM?",
+  "What is CommsCloud?",
+  "How do dashcams stay connected across borders?",
+  "What is autonomous carrier switching?",
+  "What is permanent roaming for IoT devices?",
+  "Which providers offer African IoT connectivity?",
+] as const;

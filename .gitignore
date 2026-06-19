@@ -1,0 +1,6 @@
+tmp/
+site/*.png
+site/*.log
+site/.next-dev*.log
+site/.lighthouseci/
+site/tsconfig.tsbuildinfo
