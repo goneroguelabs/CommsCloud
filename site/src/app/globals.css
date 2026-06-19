@@ -1181,28 +1181,58 @@ button {
   padding: clamp(2rem, 3vw, 3.1rem);
   position: relative;
   text-decoration: none;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease,
+    background-color 260ms ease;
+  will-change: transform;
 }
 
 .capability-card::before {
-  background: radial-gradient(circle at 22% 0%, rgb(255 255 255 / 80%), transparent 34%);
+  background:
+    radial-gradient(circle at 18% 0%, rgb(255 255 255 / 88%), transparent 36%),
+    linear-gradient(135deg, rgb(18 191 178 / 12%), transparent 52%);
   content: "";
   inset: 0;
   opacity: 0;
   pointer-events: none;
   position: absolute;
+  transform: translateY(14px);
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.capability-card::after {
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 54%), transparent);
+  content: "";
+  height: 100%;
+  left: -75%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: skewX(-16deg);
+  transition: left 520ms ease;
+  width: 42%;
 }
 
 .capability-card:hover,
 .capability-card:focus-visible {
-  background: #f3f4f6;
-  box-shadow: none;
+  background: #f7f8fa;
+  box-shadow: 0 24px 70px rgb(27 42 74 / 14%);
   outline: none;
-  transform: none;
+  transform: translateY(-8px);
 }
 
 .capability-card:hover::before,
 .capability-card:focus-visible::before {
-  opacity: 0;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.capability-card:hover::after,
+.capability-card:focus-visible::after {
+  left: 135%;
 }
 
 .capability-card-title,
@@ -1219,6 +1249,9 @@ button {
   letter-spacing: -0.045em;
   line-height: 1.18;
   max-width: 13ch;
+  transition:
+    color 220ms ease,
+    transform 220ms ease;
 }
 
 .capability-card-body {
@@ -1238,22 +1271,33 @@ button {
   justify-content: space-between;
   margin-top: auto;
   padding-top: 3rem;
+  transition:
+    color 220ms ease,
+    transform 220ms ease;
+}
+
+.capability-card:hover .capability-card-title,
+.capability-card:focus-visible .capability-card-title {
+  color: #101a64;
+  transform: translateY(-2px);
 }
 
 .capability-card:hover .capability-card-link,
 .capability-card:focus-visible .capability-card-link {
-  color: #12bfb2;
+  color: #0fa99e;
+  transform: translateY(-1px);
 }
 
 .capability-card-link .arrow-right-icon {
   height: 1.2rem;
   transform: translateX(0);
+  transition: transform 220ms ease;
   width: 1.2rem;
 }
 
 .capability-card:hover .capability-card-link .arrow-right-icon,
 .capability-card:focus-visible .capability-card-link .arrow-right-icon {
-  transform: translateX(0);
+  transform: translateX(8px);
 }
 
 @keyframes arrow-pass {
