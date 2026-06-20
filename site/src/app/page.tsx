@@ -43,6 +43,42 @@ const heroSlides = [
   },
 ];
 
+const handoffPillars = [
+  {
+    title: "Built for IoT. Designed for You.",
+    description:
+      "View signalling events, apply policies, troubleshoot devices and suspend SIMs in one place. RESTful APIs make integration with your platform straightforward.",
+    icon: "/images/connectivity-principles/single-pane-management.png",
+    points: [
+      "Signalling events and SIM status",
+      "Policy control from the CMP",
+      "RESTful API integration",
+    ],
+  },
+  {
+    title: "One\u00a0SIM.\u00a0Any\u00a0Format.\nAnywhere.",
+    description:
+      "Plastic, eSIM and iSIM options are ready for any device or deployment. From dashcams in DRC to smart meters in Kenya, one SKU simplifies rollout.",
+    icon: "/images/connectivity-principles/sim-formats.png",
+    points: [
+      "Plastic, eSIM and iSIM formats",
+      "One SKU for device variants",
+      "Deployment support across regions",
+    ],
+  },
+  {
+    title: "Smarter SIMs for Scale.",
+    description:
+      "Multi-IMSI with geo-redundant core networks auto-switches to the best available operator, reducing roaming failures and manual switching.",
+    icon: "/images/connectivity-principles/global-access.png",
+    points: [
+      "Multi-IMSI operator switching",
+      "Geo-redundant core networks",
+      "Lower roaming and downtime risk",
+    ],
+  },
+] as const;
+
 const networkBenefits = [
   {
     text: "A single contract with access to our library of IMSI providers",
@@ -181,8 +217,8 @@ export default function Home() {
               <div className="hero-grid-haze" />
               <DottedGlobe />
             </div>
-            <div className="absolute inset-x-0 bottom-0 h-px bg-brand-gold/70" />
-            <div className="hero-inner relative mx-auto flex max-w-7xl items-center px-5 py-20 md:px-8">
+            <div className="absolute inset-x-0 bottom-0 z-0 h-px bg-brand-gold/70" />
+            <div className="hero-inner relative z-10 mx-auto flex max-w-7xl items-center px-5 py-20 md:px-8">
               <div className="hero-copy max-w-5xl">
                 <p className="hero-kicker mb-5 text-sm font-bold uppercase text-brand-gold">
                   Cloud Connect
@@ -204,38 +240,37 @@ export default function Home() {
             </div>
           </section>
 
-          <section
-            className="statement-band section-reveal bg-brand-surface px-5 py-14 md:px-8 md:py-18"
-            data-reveal="fade"
-          >
+          <section className="landing-handoff section-reveal px-5 py-16 text-white md:px-8 md:py-24">
             <div className="mx-auto max-w-7xl">
-              <h2 className="statement-title text-brand-navy">
-                <span>We Provide &amp; Guide</span>
-                <span className="statement-divider" aria-hidden="true" />
-                <span>You Manage &amp; Grow</span>
-              </h2>
-            </div>
-          </section>
+              <div className="landing-handoff-heading" data-reveal="up">
+                <p className="landing-handoff-eyebrow">Cloud Connect</p>
+                <h2>IoT Connectivity Built for Growth</h2>
+              </div>
 
-          <section className="section-reveal bg-brand-navy px-5 py-14 text-white md:px-8 md:py-18">
-            <div className="mx-auto max-w-7xl">
-              <div className="grid gap-4 md:grid-cols-2" data-reveal="up">
-                {heroSlides.slice(1).map((slide) => (
-                  <Link
-                    key={slide.title}
-                    href={slide.href}
-                    className="surface-modern border border-brand-mist/25 bg-white/8 p-7"
-                  >
-                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-gold">
-                      {slide.cta}
-                    </p>
-                    <h2 className="mt-4 text-3xl font-bold leading-tight">
-                      {slide.title}
-                    </h2>
-                    <p className="mt-4 text-base leading-7 text-white/72">
-                      {slide.body}
-                    </p>
-                  </Link>
+              <div className="landing-handoff-grid" data-reveal="up">
+                {handoffPillars.map((pillar) => (
+                  <article key={pillar.title} className="landing-handoff-item">
+                    <Image
+                      src={pillar.icon}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className="landing-handoff-icon"
+                    />
+                    <h3>{pillar.title}</h3>
+                    <p>{pillar.description}</p>
+                    <ul>
+                      {pillar.points.map((point) => (
+                        <li key={point}>
+                          <span
+                            className="landing-handoff-check"
+                            aria-hidden="true"
+                          />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
                 ))}
               </div>
             </div>

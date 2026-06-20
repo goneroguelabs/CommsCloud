@@ -92,8 +92,8 @@ function buildLandPoints(): GeoPoint[] {
 
 const LAND_POINTS = buildLandPoints();
 const TO_RADIANS = Math.PI / 180;
-const INITIAL_ROTATION = -72 * TO_RADIANS;
-const ROTATION_SPEED = 0.00046;
+const INITIAL_ROTATION = -112 * TO_RADIANS;
+const ROTATION_SPEED = 0.00027;
 
 export function DottedGlobe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -114,7 +114,7 @@ export function DottedGlobe() {
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2.5);
       width = bounds.width;
       height = bounds.height;
       canvas.width = Math.max(1, Math.round(width * pixelRatio));
@@ -125,18 +125,19 @@ export function DottedGlobe() {
     const draw = (time: number) => {
       context.clearRect(0, 0, width, height);
 
-      const radius = Math.min(width, height) * 0.46;
-      const centerX = width * 0.51;
+      const radius = Math.min(width, height) * 0.475;
+      const centerX = width * 0.54;
       const centerY = height * 0.51;
       const elapsed = reducedMotion.matches ? 0 : time - startTime;
       const rotation = INITIAL_ROTATION + elapsed * ROTATION_SPEED;
-      const tilt = 10 * TO_RADIANS;
+      const tilt = 7 * TO_RADIANS;
       const projected: Array<{
         x: number;
         y: number;
         z: number;
         size: number;
         marker: boolean;
+        opacity: number;
       }> = [];
 
       for (const point of LAND_POINTS) {
@@ -149,22 +150,29 @@ export function DottedGlobe() {
         const tiltedY = sphereY * Math.cos(tilt) - sphereZ * Math.sin(tilt);
         const tiltedZ = sphereY * Math.sin(tilt) + sphereZ * Math.cos(tilt);
 
-        if (tiltedZ < -0.2) continue;
+        if (tiltedZ < -0.22) continue;
 
         const perspective = 0.88 + tiltedZ * 0.12;
+        const horizonFade = Math.min(1, Math.max(0.42, (tiltedZ + 0.22) / 0.34));
+        const screenRadius = Math.hypot(sphereX, tiltedY);
+        const limbFade = Math.min(1, Math.max(0, (0.99 - screenRadius) / 0.18));
+        const softenedLimb = limbFade * limbFade * (3 - 2 * limbFade);
         projected.push({
           x: centerX + sphereX * radius * perspective,
           y: centerY - tiltedY * radius * perspective,
           z: tiltedZ,
-          size: point.marker ? 4.6 : Math.max(0.44, 0.76 + tiltedZ * 0.56),
+          size: point.marker ? 5.2 : Math.max(0.7, 1.02 + tiltedZ * 0.44),
           marker: Boolean(point.marker),
+          opacity: horizonFade * softenedLimb,
         });
       }
 
       projected.sort((a, b) => a.z - b.z);
 
       for (const point of projected) {
-        const opacity = point.marker ? 1 : Math.max(0.12, 0.28 + point.z * 0.5);
+        const opacity = point.marker
+          ? 1
+          : Math.min(0.74, Math.max(0.04, (0.5 + point.z * 0.42) * point.opacity));
         context.beginPath();
         context.arc(point.x, point.y, point.size, 0, Math.PI * 2);
         context.fillStyle = point.marker

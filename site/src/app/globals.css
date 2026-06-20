@@ -396,6 +396,141 @@ button {
   transform-origin: left;
 }
 
+.landing-handoff {
+  background: #ffffff;
+  border-bottom: 1px solid rgb(185 180 201 / 45%);
+  overflow: hidden;
+  position: relative;
+}
+
+.landing-handoff > div {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-handoff-heading {
+  margin-inline: auto;
+  max-width: 76rem;
+  text-align: center;
+}
+
+.landing-handoff-eyebrow {
+  color: var(--brand-gold);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.landing-handoff-heading h2 {
+  align-items: center;
+  color: var(--brand-navy);
+  display: grid;
+  font-family: var(--font-primary), Calibri, Arial, sans-serif;
+  font-size: clamp(2.35rem, 4vw, 4.35rem);
+  font-weight: 600;
+  gap: clamp(0.65rem, 1.8vw, 1.15rem);
+  grid-template-columns: 1fr;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  margin-top: 1.15rem;
+  white-space: nowrap;
+}
+
+.landing-handoff-heading h2 span:last-child {
+  color: var(--brand-lavender);
+}
+
+.landing-handoff-grid {
+  display: grid;
+  gap: clamp(2rem, 4.5vw, 4.5rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+.landing-handoff-item {
+  border-top: 1px solid rgb(185 180 201 / 52%);
+  padding-top: 2rem;
+}
+
+.landing-handoff-icon {
+  height: 2.6rem;
+  object-fit: contain;
+  width: 2.6rem;
+}
+
+.landing-handoff-item h3 {
+  color: var(--brand-navy);
+  font-family: var(--font-primary), Calibri, Arial, sans-serif;
+  font-size: clamp(1.55rem, 1.95vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  margin-top: 1.75rem;
+  max-width: 14ch;
+  white-space: pre-line;
+}
+
+
+.landing-handoff-item:nth-child(2) h3 {
+  max-width: none;
+}
+.landing-handoff-item p {
+  color: var(--brand-muted);
+  font-size: 1.12rem;
+  line-height: 1.72;
+  margin-top: 1.2rem;
+  max-width: 35rem;
+}
+
+.landing-handoff-item ul {
+  display: grid;
+  gap: 0.72rem;
+  margin-top: 1.55rem;
+}
+
+.landing-handoff-item li {
+  align-items: center;
+  color: var(--brand-navy);
+  display: flex;
+  font-size: 0.98rem;
+  gap: 0.62rem;
+  line-height: 1.45;
+}
+
+.landing-handoff-check {
+  border: 1px solid var(--brand-gold);
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 0.78rem;
+  position: relative;
+  width: 0.78rem;
+}
+
+.landing-handoff-check::after {
+  background: var(--brand-gold);
+  border-radius: inherit;
+  content: "";
+  inset: 0.2rem;
+  position: absolute;
+}
+
+@media (max-width: 900px) {
+  .landing-handoff-heading {
+    margin-inline: 0;
+    text-align: left;
+  }
+
+  .landing-handoff-grid {
+    gap: 2.25rem;
+    grid-template-columns: 1fr;
+  }
+
+  .landing-handoff-item h3 {
+    max-width: none;
+  }
+}
 .stats-showcase {
   align-content: center;
   display: grid;
@@ -1139,27 +1274,6 @@ button {
 
   to {
     transform: scaleY(1);
-  }
-}
-
-@keyframes scroll-reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(-28px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@supports (animation-timeline: view()) {
-  [data-reveal] {
-    animation: scroll-reveal-up ease both;
-    animation-range: entry 0% cover 26%;
-    animation-timeline: view();
-    will-change: opacity, transform;
   }
 }
 
@@ -2500,7 +2614,6 @@ button {
 .wp-content blockquote:hover {
   transform: translateY(-2px);
 }
-
 
 
 
