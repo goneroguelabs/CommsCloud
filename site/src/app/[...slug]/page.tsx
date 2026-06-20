@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArticleListing } from "@/components/editorial/article-listing";
 import { ArticlePage } from "@/components/editorial/article-page";
 import {
+  getArticleHtml,
+  getArticleSummary,
   isEditorialArticle,
   isEditorialListing,
 } from "@/components/editorial/editorial-utils";
@@ -119,36 +122,61 @@ export default async function MigrationPage({ params, searchParams }: RoutePageP
     );
   }
 
+  const pageSummary = getArticleSummary(route, 260);
+
   return (
     <>
       <JsonLd data={schemas} />
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-white text-brand-navy">
         <SiteHeader />
         <main>
           <article>
-            <header className="relative overflow-hidden bg-brand-navy px-5 py-16 text-white md:px-8 md:py-24">
-            <div className="hero-media absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,var(--brand-gold)_0,transparent_18%),linear-gradient(120deg,var(--brand-navy)_0,var(--brand-lavender)_100%)]" />
-            <div className="motion-rise relative mx-auto max-w-5xl">
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-brand-gold">
-                {route.type === "post" ? "Insights" : "CommsCloud"}
-              </p>
-              <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight md:text-6xl">
-                {route.title}
-              </h1>
-              {route.description ? (
-                <p className="mt-6 max-w-3xl text-lg leading-8 text-white/78">
-                  {route.description}
-                </p>
-              ) : null}
-            </div>
-          </header>
+            <header className="border-b border-[#e5e4ec] bg-white px-5 pb-16 pt-20 md:px-8 md:pb-24 md:pt-28">
+              <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-20">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#18bdb1]">
+                    CommsCloud
+                  </p>
+                  <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[0.98] tracking-[-0.052em] text-brand-navy md:text-7xl">
+                    {route.title}
+                  </h1>
+                  {pageSummary ? (
+                    <p className="mt-7 max-w-3xl text-lg leading-8 text-[#666a70] md:text-xl">
+                      {pageSummary}
+                    </p>
+                  ) : null}
+                </div>
 
-          <div className="section-reveal mx-auto max-w-4xl px-5 py-12 md:px-8">
-            <div
-              className="wp-content max-w-none"
-              dangerouslySetInnerHTML={{ __html: route.contentHtml }}
-            />
-          </div>
+                {route.firstImage ? (
+                  <figure className="overflow-hidden rounded-[1.6rem] bg-[#f1f0f5]">
+                    <Image
+                      src={route.firstImage}
+                      alt={route.title}
+                      width={960}
+                      height={720}
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                      className="aspect-[4/3] h-full w-full object-cover"
+                    />
+                  </figure>
+                ) : (
+                  <div
+                    className="editorial-fallback aspect-[4/3] rounded-[1.6rem]"
+                    aria-hidden="true"
+                  >
+                    <span className="editorial-fallback-mark editorial-fallback-mark-large">
+                      CC
+                    </span>
+                  </div>
+                )}
+              </div>
+            </header>
+
+            <div className="mx-auto max-w-[820px] px-5 py-16 md:px-8 md:py-24">
+              <div
+                className="editorial-content"
+                dangerouslySetInnerHTML={{ __html: getArticleHtml(route) }}
+              />
+            </div>
           </article>
         </main>
         <SiteFooter />
