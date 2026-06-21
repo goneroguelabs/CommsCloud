@@ -88,8 +88,19 @@ export function GlobeNotifications() {
 
   useEffect(() => {
     let timeout = 0;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (reducedMotion.matches) {
+      return undefined;
+    }
+
     const schedule = () => {
       timeout = window.setTimeout(() => {
+        if (document.hidden) {
+          schedule();
+          return;
+        }
+
         setVisibleEvents((current) =>
           pickEvents(
             current.map((event) => event.id),
@@ -98,7 +109,7 @@ export function GlobeNotifications() {
         );
         setCycle((current) => current + 1);
         schedule();
-      }, 4000 + Math.random() * 1000);
+      }, 6500 + Math.random() * 1500);
     };
     schedule();
     return () => window.clearTimeout(timeout);

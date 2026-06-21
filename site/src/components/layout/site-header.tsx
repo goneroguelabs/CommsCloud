@@ -14,7 +14,7 @@ const navigation = [
         title: "Connectivity",
         items: [
           {
-            label: "Cloud Connect SIM",
+            label: "Cloud Connect\nSIM",
             href: "/the-best-iot-sim-card/cloud-connect-sim-card/",
             description: "Multi-network SIMs for resilient IoT deployments.",
             icon: "sim",
@@ -45,7 +45,7 @@ const navigation = [
           {
             label: "Private APN & VPN",
             href: "/private-apn-vpn/",
-            description: "Keep device data on secure private routes.",
+            description: "Keep device data on\nprivate secure routes\nfor every deployment.",
             icon: "shield",
           },
           {
@@ -68,11 +68,11 @@ const navigation = [
           {
             label: "Remote monitoring",
             href: "/remote-monitoring-systems/",
-            description: "Connect meters, sensors and field assets.",
+            description: "Connect meters,\nsensors and field\nassets.",
             icon: "monitor",
           },
           {
-            label: "Cellular IoT solutions",
+            label: "Cellular\u00a0IoT\u00a0solutions",
             href: "/cellular-iot-solutions/",
             description: "Plan connectivity for industrial IoT operations.",
             icon: "signal",
@@ -222,7 +222,7 @@ const navigation = [
 
 export function SiteHeader() {
   return (
-    <header className="site-header sticky top-0 z-40 border-b border-brand-line/40 bg-[#f5f6f8]/95 backdrop-blur-xl">
+    <header className="site-header sticky top-0 z-40 border-b border-brand-line/40 bg-[#f5f6f8]">
       <nav
         aria-label="Main navigation"
         className="mx-auto flex h-24 max-w-[82rem] items-center gap-6 px-5 md:px-8"
@@ -328,10 +328,10 @@ function MegaMenu({ item }: { item: NavigationItem }) {
                         <MegaMenuIcon name={menuItem.icon} />
                       </span>
                       <span>
-                        <span className="block text-[1rem] font-semibold leading-5">
+                        <span className="block whitespace-pre-line text-[1rem] font-semibold leading-5">
                           {menuItem.label}
                         </span>
-                        <span className="mt-1 block max-w-[16rem] text-[0.9rem] font-normal leading-5 text-[#5d6a75]">
+                        <span className="mt-1 block max-w-[16rem] whitespace-pre-line text-[0.9rem] font-normal leading-5 text-[#5d6a75]">
                           {menuItem.description}
                         </span>
                       </span>

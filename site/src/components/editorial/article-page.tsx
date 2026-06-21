@@ -95,19 +95,19 @@ export function ArticlePage({ article, posts }: ArticlePageProps) {
         ) : null}
 
         <section className="bg-brand-navy px-5 py-20 text-white md:px-8 md:py-24">
-          <div className="mx-auto flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="mx-auto max-w-7xl">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#18bdb1]">Talk to CommsCloud</p>
               <h2 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.045em] md:text-6xl">
                 Build connectivity that stays visible across borders.
               </h2>
+              <Link
+                href="/contact/"
+                className="mt-9 inline-flex min-h-14 items-center justify-center rounded-lg bg-[#18bdb1] px-8 text-base font-semibold text-white transition hover:bg-white hover:text-brand-navy"
+              >
+                Speak to an expert
+              </Link>
             </div>
-            <Link
-              href="/contact/"
-              className="inline-flex min-h-14 shrink-0 items-center justify-center rounded-lg bg-[#18bdb1] px-8 text-base font-semibold text-white transition hover:bg-white hover:text-brand-navy"
-            >
-              Speak to an expert
-            </Link>
           </div>
         </section>
       </main>

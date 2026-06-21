@@ -6,6 +6,18 @@ export type MigrationRoute = (typeof migrationData.routes)[number];
 export function localizeMigratedHtml(html: string) {
   return html
     .replace(
+      /<figure\b[^>]*>[\s\S]*?<img\b[^>]*(?:src|srcset)=("|')[^"']*\/wp-content\/uploads\/[^"']*\1[^>]*>[\s\S]*?<\/figure>/gi,
+      "",
+    )
+    .replace(
+      /<p\b[^>]*>\s*(?:<a\b[^>]*>\s*)?<img\b[^>]*(?:src|srcset)=("|')[^"']*\/wp-content\/uploads\/[^"']*\1[^>]*\/?>\s*(?:<\/a>\s*)?<\/p>/gi,
+      "",
+    )
+    .replace(
+      /(?:<a\b[^>]*>\s*)?<img\b[^>]*(?:src|srcset)=("|')[^"']*\/wp-content\/uploads\/[^"']*\1[^>]*\/?>\s*(?:<\/a>)?/gi,
+      "",
+    )
+    .replace(
       /\b(href|action)=("|')https?:\/\/(?:www\.)?commscloud\.com(\/[^"']*)\2/gi,
       (_match, attribute: string, quote: string, path: string) => `${attribute}=${quote}${path}${quote}`,
     )
@@ -25,6 +37,7 @@ export function localizeMigratedHtml(html: string) {
 
 export const migrationRoutes = migrationData.routes.map((route) => ({
   ...route,
+  firstImage: isWordpressUpload(route.firstImage) ? "" : route.firstImage,
   description: cleanMigratedSummary(route.description),
   excerptHtml: cleanMigratedSummary(route.excerptHtml),
   contentTextPreview: cleanMigratedSummary(route.contentTextPreview),
@@ -36,6 +49,10 @@ function cleanMigratedSummary(value: string) {
     .replace(/\s*Read\s+More\s*$/i, "")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function isWordpressUpload(value: string) {
+  return /\/wp-content\/uploads\//i.test(value);
 }
 
 export function normalizePath(path: string) {

@@ -94,6 +94,7 @@ const LAND_POINTS = buildLandPoints();
 const TO_RADIANS = Math.PI / 180;
 const INITIAL_ROTATION = -112 * TO_RADIANS;
 const ROTATION_SPEED = 0.00027;
+const FRAME_INTERVAL = 1000 / 30;
 
 export function DottedGlobe() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -111,10 +112,12 @@ export function DottedGlobe() {
     let animationFrame = 0;
     let startTime = performance.now();
     let pausedAt = 0;
+    let lastDrawTime = 0;
+    let isInView = true;
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2.5);
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
       width = bounds.width;
       height = bounds.height;
       canvas.width = Math.max(1, Math.round(width * pixelRatio));
@@ -179,19 +182,25 @@ export function DottedGlobe() {
           ? "rgba(250, 166, 26, 0.98)"
           : `rgba(97, 90, 132, ${opacity})`;
 
-        if (point.marker) {
-          context.shadowColor = "rgba(250, 166, 26, 0.72)";
-          context.shadowBlur = 16;
-        }
-
         context.fill();
-        context.shadowBlur = 0;
+
+        if (point.marker) {
+          context.beginPath();
+          context.arc(point.x, point.y, point.size + 3, 0, Math.PI * 2);
+          context.strokeStyle = "rgba(250, 166, 26, 0.18)";
+          context.lineWidth = 2;
+          context.stroke();
+        }
       }
     };
 
     const animate = (time: number) => {
-      draw(time);
-      if (!reducedMotion.matches && !document.hidden) {
+      if (time - lastDrawTime >= FRAME_INTERVAL) {
+        draw(time);
+        lastDrawTime = time;
+      }
+
+      if (!reducedMotion.matches && !document.hidden && isInView) {
         animationFrame = requestAnimationFrame(animate);
       }
     };
@@ -201,7 +210,7 @@ export function DottedGlobe() {
       resize();
       draw(performance.now());
 
-      if (!reducedMotion.matches && !document.hidden) {
+      if (!reducedMotion.matches && !document.hidden && isInView) {
         animationFrame = requestAnimationFrame(animate);
       }
     };
@@ -218,8 +227,22 @@ export function DottedGlobe() {
       restart();
     };
 
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isInView = Boolean(entry?.isIntersecting);
+
+        if (isInView) {
+          restart();
+        } else {
+          cancelAnimationFrame(animationFrame);
+        }
+      },
+      { rootMargin: "160px" },
+    );
+
     const resizeObserver = new ResizeObserver(restart);
     resizeObserver.observe(canvas);
+    intersectionObserver.observe(canvas);
     reducedMotion.addEventListener("change", restart);
     document.addEventListener("visibilitychange", handleVisibility);
     restart();
@@ -227,6 +250,7 @@ export function DottedGlobe() {
     return () => {
       cancelAnimationFrame(animationFrame);
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       reducedMotion.removeEventListener("change", restart);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
