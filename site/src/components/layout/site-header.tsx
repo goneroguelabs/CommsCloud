@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import type { FocusEvent } from "react";
+import { useRef, useState } from "react";
 
 const navigation = [
   {
@@ -221,11 +225,31 @@ const navigation = [
 ] as const;
 
 export function SiteHeader() {
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function clearCloseTimer() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function openMegaMenu(href: string) {
+    clearCloseTimer();
+    setOpenMenu(href);
+  }
+
+  function scheduleCloseMenu() {
+    clearCloseTimer();
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
+  }
+
   return (
     <header className="site-header sticky top-0 z-40 border-b border-brand-line/40 bg-[#f5f6f8]">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex h-24 max-w-[82rem] items-center gap-6 px-5 md:px-8"
+        className="mx-auto flex h-24 w-full max-w-[1320px] items-center gap-6 px-5 md:px-8"
       >
         <Link href="/" className="flex shrink-0 items-center">
           <span className="sr-only">CommsCloud home</span>
@@ -241,15 +265,24 @@ export function SiteHeader() {
 
         <div className="ml-auto hidden items-center gap-6 text-[1.12rem] font-medium text-[#142b3a] xl:gap-7 lg:flex">
           {navigation.map((item) => (
-            <div key={item.href} className="group flex h-24 items-center">
+            <div key={item.href} className="flex items-center">
               <Link
-                className="inline-flex items-center gap-1.5 transition hover:text-[#12bfb2] focus:text-[#12bfb2]"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 transition hover:bg-white hover:text-[#12bfb2] hover:shadow-[0_8px_24px_rgba(27,42,74,0.08)] focus:bg-white focus:text-[#12bfb2]"
                 href={item.href}
+                onBlur={scheduleCloseMenu}
+                onFocus={() => openMegaMenu(item.href)}
+                onMouseEnter={() => openMegaMenu(item.href)}
+                onMouseLeave={scheduleCloseMenu}
               >
                 {item.label}
                 <ChevronDown />
               </Link>
-              <MegaMenu item={item} />
+              <MegaMenu
+                isOpen={openMenu === item.href}
+                item={item}
+                onMouseEnter={() => openMegaMenu(item.href)}
+                onMouseLeave={scheduleCloseMenu}
+              />
             </div>
           ))}
 
@@ -299,30 +332,59 @@ const menuIconImages: Record<MenuIconName, string> = {
   training: "/brand/menu-icons/detailed-site-design.png",
 };
 
-function MegaMenu({ item }: { item: NavigationItem }) {
+function MegaMenu({
+  isOpen,
+  item,
+  onMouseEnter,
+  onMouseLeave,
+}: {
+  isOpen: boolean;
+  item: NavigationItem;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}) {
+  function handleBlur(event: FocusEvent<HTMLDivElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      onMouseLeave();
+    }
+  }
+
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-24 z-50 translate-y-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
-      <div className="border-t border-brand-line/30 bg-white shadow-[0_24px_44px_rgba(21,28,100,0.08)]">
-        <div className="mx-auto grid max-w-[82rem] grid-cols-[220px_1fr_200px] gap-9 px-5 py-10 md:px-8">
+    <div
+      aria-hidden={!isOpen}
+      className={`pointer-events-none fixed inset-x-0 top-24 z-50 px-5 pt-3 transition duration-200 md:px-8 ${
+        isOpen ? "visible opacity-100" : "invisible opacity-0"
+      }`}
+      >
+      <div
+        className={`mx-auto max-w-[78rem] origin-top overflow-hidden rounded-2xl border border-brand-line/35 bg-white shadow-[0_28px_70px_rgba(21,28,100,0.16)] ring-1 ring-white/70 transition duration-200 ${
+          isOpen ? "pointer-events-auto translate-y-0" : "pointer-events-none translate-y-2"
+        }`}
+        onBlur={handleBlur}
+        onFocus={onMouseEnter}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        <div className="grid grid-cols-[200px_1fr_190px] gap-7 px-7 py-7">
           <div>
-            <h2 className="text-[2.15rem] font-medium tracking-[-0.04em] text-[#18bdb1]">
+            <h2 className="text-[2rem] font-medium tracking-[-0.04em] text-[#18bdb1]">
               {item.intro.title}
             </h2>
-            <p className="mt-4 max-w-[22rem] text-[1.08rem] leading-7 text-[#243b4a]">
+            <p className="mt-3 max-w-[20rem] text-[1rem] leading-7 text-[#243b4a]">
               {item.intro.body}
             </p>
           </div>
 
-          <div className="grid items-start gap-x-8 gap-y-10" style={{ gridTemplateColumns: `repeat(${Math.min(item.sections.length, 3)}, minmax(0, 1fr))` }}>
+          <div className="grid items-start gap-x-7 gap-y-8" style={{ gridTemplateColumns: `repeat(${Math.min(item.sections.length, 3)}, minmax(0, 1fr))` }}>
             {item.sections.map((section) => (
               <div key={section.title} className="grid content-start">
                 <p className="h-5 text-base font-semibold leading-5 text-[#18bdb1]">{section.title}</p>
-                <div className="mt-7 grid gap-4">
+                <div className="mt-5 grid gap-3">
                   {section.items.map((menuItem) => (
                     <Link
                       key={menuItem.href}
                       href={menuItem.href}
-                      className="group/item grid grid-cols-[2.35rem_1fr] items-start gap-3 rounded-md py-1 text-[#102b3a] transition hover:text-[#18bdb1]"
+                      className="group/item grid grid-cols-[2.35rem_1fr] items-start gap-3 rounded-lg p-2 text-[#102b3a] transition hover:bg-[#f5f6f8] hover:text-[#18bdb1]"
                     >
                       <span className="mega-menu-icon text-[#18bdb1]">
                         <MegaMenuIcon name={menuItem.icon} />
@@ -342,14 +404,14 @@ function MegaMenu({ item }: { item: NavigationItem }) {
             ))}
           </div>
 
-          <aside className="-my-10 bg-[#f5f6f8] px-7 py-10">
-            <p className="mb-7 text-base font-semibold text-[#18bdb1]">{item.aside.title}</p>
-            <div className="grid gap-6">
+          <aside className="rounded-xl bg-[#f5f6f8] px-6 py-6">
+            <p className="mb-5 text-base font-semibold text-[#18bdb1]">{item.aside.title}</p>
+            <div className="grid gap-4">
               {item.aside.items.map((asideItem) => (
                 <Link
                   key={asideItem.href}
                   href={asideItem.href}
-                  className="text-[1.06rem] font-semibold leading-6 text-[#102b3a] transition hover:text-[#18bdb1]"
+                  className="rounded-lg px-2 py-1.5 text-[1.02rem] font-semibold leading-6 text-[#102b3a] transition hover:bg-white hover:text-[#18bdb1]"
                 >
                   {asideItem.label}
                 </Link>

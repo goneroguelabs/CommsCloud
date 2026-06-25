@@ -3,7 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #1b2a4a;
-  --font-primary: "Aptos Display", "Aptos", "Segoe UI", Calibri, Arial, sans-serif;
+  --font-primary: var(--font-geist), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --brand-navy: #1b2a4a;
   --brand-gold: #f5a623;
   --brand-ink: #1b2a4a;
@@ -36,7 +36,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-primary), Calibri, Arial, sans-serif;
+  font-family: var(--font-primary);
   font-feature-settings:
     "kern" 1,
     "liga" 1,
@@ -406,7 +406,7 @@ button {
   align-items: center;
   color: var(--brand-navy);
   display: grid;
-  font-family: var(--font-primary), Calibri, Arial, sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(2.35rem, 4vw, 4.35rem);
   font-weight: 600;
   gap: clamp(0.65rem, 1.8vw, 1.15rem);
@@ -441,7 +441,7 @@ button {
 
 .landing-handoff-item h3 {
   color: var(--brand-navy);
-  font-family: var(--font-primary), Calibri, Arial, sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(1.55rem, 1.95vw, 2.15rem);
   font-weight: 600;
   letter-spacing: -0.035em;
@@ -538,7 +538,7 @@ button {
 
 .stats-showcase-item dd {
   color: var(--brand-navy);
-  font-family: "Segoe UI Variable Display", "Segoe UI", "Aptos Display", Arial, sans-serif;
+  font-family: var(--font-primary);
   font-size: clamp(3.9rem, 8.6vw, 8.9rem);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -1020,11 +1020,11 @@ button {
 }
 
 .landing-page {
-  font-family: "Segoe UI Variable Text", "Segoe UI", "Aptos", Arial, sans-serif;
+  font-family: var(--font-primary);
 }
 
 .landing-page :where(h1, h2, h3) {
-  font-family: "Segoe UI Variable Display", "Segoe UI", "Aptos Display", Arial, sans-serif;
+  font-family: var(--font-primary);
   font-weight: 500;
   letter-spacing: -0.025em;
 }
@@ -1533,15 +1533,28 @@ button {
 
 .coverage-shell {
   background:
-    linear-gradient(90deg, rgb(27 42 74 / 5%) 1px, transparent 1px),
     radial-gradient(circle at 84% 9%, rgb(185 180 201 / 30%), transparent 24rem),
     linear-gradient(180deg, #ffffff 0%, #ffffff 48%, rgb(185 180 201 / 12%) 100%);
-  background-position: left top, center top, center top;
-  background-size: 76px 100%, auto, auto;
   color: var(--brand-navy);
   min-height: 100dvh;
   overflow: hidden;
   position: relative;
+}
+
+@keyframes coverage-grid-drift {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      76px 76px,
+      76px 76px,
+      76px 76px;
+  }
 }
 
 .coverage-hero {
@@ -1552,8 +1565,31 @@ button {
   margin: 0 auto;
   max-width: 78rem;
   padding: clamp(5rem, 8vw, 8rem) 2rem clamp(4rem, 6vw, 6rem);
+  position: relative;
   text-align: center;
   width: 100%;
+  z-index: 1;
+}
+
+.coverage-hero::before {
+  animation: coverage-grid-drift 18s linear infinite;
+  background-image:
+    radial-gradient(circle, rgb(245 166 35 / 18%) 0 2px, transparent 2.2px),
+    linear-gradient(rgb(27 42 74 / 6%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(27 42 74 / 6%) 1px, transparent 1px);
+  background-size:
+    76px 76px,
+    76px 76px,
+    76px 76px;
+  content: "";
+  inset: 0 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  mask-image: linear-gradient(180deg, rgb(0 0 0), transparent 88%);
+  opacity: 0.8;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
 }
 
 .coverage-copy {
@@ -1655,7 +1691,7 @@ button {
 }
 
 .coverage-map-stage {
-  aspect-ratio: 16 / 7.8;
+  aspect-ratio: 16 / 9;
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -1676,6 +1712,7 @@ button {
 }
 
 .coverage-world-inner {
+  transform: scaleY(1.25);
   transform-box: view-box;
   transform-origin: center;
   transition: transform 260ms ease;
@@ -2291,7 +2328,8 @@ button {
   .coverage-map-stage {
     aspect-ratio: 4 / 3;
     max-height: none;
-    min-height: 20rem;
+    min-height: 0;
+    width: 100%;
   }
 
   .coverage-map-tooltip {

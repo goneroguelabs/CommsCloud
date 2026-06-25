@@ -39,8 +39,8 @@ export function WorldCoverageMap({ features }: { features: CoverageMapFeature[] 
     <div className="coverage-map-stage">
       <svg
         className="coverage-world"
-        viewBox="0 62 1200 530"
-        preserveAspectRatio="xMidYMid slice"
+        viewBox="0 -115 1200 675"
+        preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label="CommsCloud country coverage map"
       >

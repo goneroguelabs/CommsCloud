@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { Geist } from "next/font/google";
 import { InternalLinkGuard } from "@/components/navigation/internal-link-guard";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://commscloud.com";
 const isProduction = process.env.VERCEL_ENV === "production";
+const geist = Geist({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-geist",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -53,7 +59,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`${geist.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <InternalLinkGuard />
         {children}
