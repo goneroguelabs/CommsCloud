@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AnimatedSelect } from "@/components/forms/animated-select";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 
@@ -233,16 +234,21 @@ export default function ContactPage() {
                     Company*
                     <input className={inputClassName} name="company" placeholder="Company name" required type="text" />
                   </label>
-                  <label className="grid gap-2 text-base font-semibold text-brand-navy">
-                    Deployment size*
-                    <select className={inputClassName} defaultValue="" name="deployment-size" required>
-                      <option disabled value="">Select device volume</option>
-                      <option value="1-100">1 to 100 devices</option>
-                      <option value="101-1000">101 to 1,000 devices</option>
-                      <option value="1001-10000">1,001 to 10,000 devices</option>
-                      <option value="10000+">10,000+ devices</option>
-                    </select>
-                  </label>
+                  <div className="grid gap-2 text-base font-semibold text-brand-navy">
+                    <span>Deployment size*</span>
+                    <AnimatedSelect
+                      className={inputClassName}
+                      name="deployment-size"
+                      options={[
+                        { label: "1 to 100 devices", value: "1-100" },
+                        { label: "101 to 1,000 devices", value: "101-1000" },
+                        { label: "1,001 to 10,000 devices", value: "1001-10000" },
+                        { label: "10,000+ devices", value: "10000+" },
+                      ]}
+                      placeholder="Select device volume"
+                      required
+                    />
+                  </div>
                   <label className="grid gap-2 text-base font-semibold text-brand-navy md:col-span-2">
                     Message*
                     <textarea

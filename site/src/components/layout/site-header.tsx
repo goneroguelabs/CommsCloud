@@ -41,7 +41,7 @@ const navigation = [
         title: "Management",
         items: [
           {
-            label: "Connectivity Management Portal",
+            label: "Connectivity\nManagement\u00a0Portal",
             href: "/connectivity-management-portal/",
             description: "Manage signalling events, policies and SIM status.",
             icon: "dashboard",
@@ -55,7 +55,7 @@ const navigation = [
           {
             label: "24/7 support",
             href: "/the-best-iot-sim-card/iot-sim-cards-for-africa/sla/",
-            description: "Escalation paths with connectivity specialists.",
+            description: "Escalation paths\nwith connectivity\nspecialists.",
             icon: "support",
           },
         ],
@@ -78,7 +78,7 @@ const navigation = [
           {
             label: "Cellular\u00a0IoT\u00a0solutions",
             href: "/cellular-iot-solutions/",
-            description: "Plan connectivity for industrial IoT operations.",
+            description: "Plan connectivity\nfor industrial IoT\noperations.",
             icon: "signal",
           },
         ],
@@ -286,7 +286,7 @@ export function SiteHeader() {
             </div>
           ))}
 
-          <Link href="/contact/" className="transition hover:text-[#12bfb2]">
+          <Link href="/contact/" className="inline-flex items-center rounded-full px-3 py-2 transition hover:bg-white hover:text-[#12bfb2] hover:shadow-[0_8px_24px_rgba(27,42,74,0.08)] focus:bg-white focus:text-[#12bfb2]">
             Contact
           </Link>
           <Link
@@ -357,7 +357,7 @@ function MegaMenu({
       }`}
       >
       <div
-        className={`mx-auto max-w-[78rem] origin-top overflow-hidden rounded-2xl border border-brand-line/35 bg-white shadow-[0_28px_70px_rgba(21,28,100,0.16)] ring-1 ring-white/70 transition duration-200 ${
+        className={`mx-auto max-w-[82rem] origin-top overflow-hidden rounded-2xl border border-brand-line/35 bg-white shadow-[0_28px_70px_rgba(21,28,100,0.16)] ring-1 ring-white/70 transition duration-200 ${
           isOpen ? "pointer-events-auto translate-y-0" : "pointer-events-none translate-y-2"
         }`}
         onBlur={handleBlur}
@@ -365,7 +365,7 @@ function MegaMenu({
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <div className="grid grid-cols-[200px_1fr_190px] gap-7 px-7 py-7">
+        <div className="grid grid-cols-[200px_1fr_190px] gap-5 px-7 py-7">
           <div>
             <h2 className="text-[2rem] font-medium tracking-[-0.04em] text-[#18bdb1]">
               {item.intro.title}
@@ -384,7 +384,7 @@ function MegaMenu({
                     <Link
                       key={menuItem.href}
                       href={menuItem.href}
-                      className="group/item grid grid-cols-[2.35rem_1fr] items-start gap-3 rounded-lg p-2 text-[#102b3a] transition hover:bg-[#f5f6f8] hover:text-[#18bdb1]"
+                      className="group/item grid min-w-0 grid-cols-[2.35rem_minmax(0,1fr)] items-start gap-3 rounded-lg p-2 text-[#102b3a] transition hover:bg-[#f5f6f8] hover:text-[#18bdb1]"
                     >
                       <span className="mega-menu-icon text-[#18bdb1]">
                         <MegaMenuIcon name={menuItem.icon} />
@@ -439,9 +439,7 @@ function MegaMenuIcon({ name }: { name: MenuIconName }) {
       alt=""
       width={48}
       height={48}
-      className="mega-menu-icon-image"
+      className={`mega-menu-icon-image ${name === "dashboard" ? "translate-x-px" : ""}`}
     />
   );
 }
-
-

@@ -28,12 +28,6 @@ const footerColumns = [
   },
 ] as const;
 
-const legalLinks = [
-  { label: "Terms of Service", href: "/terms-of-service/" },
-  { label: "Privacy Policy", href: "/privacy-policy/" },
-  { label: "Cookie Policy", href: "/cookie-policy/" },
-] as const;
-
 const socialLinks = [
   {
     label: "LinkedIn",
@@ -131,18 +125,8 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-20 border-t border-[#e5e7eb] pt-10">
-          <div className="flex flex-col gap-5 text-lg text-[#8b9298] md:flex-row md:items-center md:justify-between">
+          <div className="text-lg text-[#8b9298]">
             <p>Copyright CommsCloud, Cape Town, South Africa</p>
-            <div className="flex flex-wrap gap-x-4 gap-y-2">
-              {legalLinks.map((item, index) => (
-                <span key={item.href} className="inline-flex items-center gap-4">
-                  <Link href={item.href} className="transition hover:text-[#18bdb1]">
-                    {item.label}
-                  </Link>
-                  {index < legalLinks.length - 1 ? <span aria-hidden="true">/</span> : null}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </div>

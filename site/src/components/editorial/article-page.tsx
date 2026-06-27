@@ -66,7 +66,7 @@ export function ArticlePage({ article, posts }: ArticlePageProps) {
             </div>
           </header>
 
-          <div className="mx-auto grid max-w-[86rem] gap-10 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-[minmax(0,820px)_18rem] lg:items-start lg:justify-center">
+          <div className="mx-auto max-w-[820px] px-5 py-16 md:px-8 md:py-24">
             <div className="min-w-0 rounded-[1.8rem] border border-[#e5e4ec] bg-white p-6 shadow-[0_20px_70px_rgba(21,28,100,0.055)] md:p-10">
               <div
                 className="editorial-content"
@@ -74,23 +74,6 @@ export function ArticlePage({ article, posts }: ArticlePageProps) {
               />
             </div>
 
-            <aside className="rounded-[1.6rem] border border-[#e2e1e9] bg-[#fbfbfe] p-6 shadow-[0_18px_55px_rgba(21,28,100,0.055)] lg:sticky lg:top-32">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#18bdb1]">
-                Deployment help
-              </p>
-              <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.045em]">
-                Need this translated into a network plan?
-              </h2>
-              <p className="mt-4 text-base leading-7 text-[#666a70]">
-                Share your regions, devices and support needs with the CommsCloud team.
-              </p>
-              <Link
-                href="/contact/"
-                className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#18bdb1] px-5 text-base font-semibold text-white transition hover:bg-brand-navy"
-              >
-                Start a brief
-              </Link>
-            </aside>
           </div>
         </article>
 
