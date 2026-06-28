@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { FocusEvent } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navigation = [
   {
@@ -227,6 +227,9 @@ const navigation = [
 export function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
 
   function clearCloseTimer() {
     if (closeTimer.current) {
@@ -245,11 +248,57 @@ export function SiteHeader() {
     closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
   }
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const panel = menuPanelRef.current;
+    const focusableElements = panel?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    focusableElements?.[0]?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+        menuTriggerRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab" || !focusableElements?.length) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
+
+  function closeMobileMenu({ restoreFocus = false } = {}) {
+    setIsMobileMenuOpen(false);
+    if (restoreFocus) menuTriggerRef.current?.focus();
+  }
+
   return (
     <header className="site-header sticky top-0 z-40 border-b border-brand-line/40 bg-[#f5f6f8]">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex h-24 w-full max-w-[1320px] items-center gap-6 px-5 md:px-8"
+        className="mx-auto flex h-[4.5rem] w-full max-w-[1320px] items-center gap-3 px-4 sm:gap-4 sm:px-5 md:px-8 lg:h-24 lg:gap-6"
       >
         <Link href="/" className="flex shrink-0 items-center">
           <span className="sr-only">CommsCloud home</span>
@@ -259,7 +308,7 @@ export function SiteHeader() {
             width={173}
             height={46}
             preload
-            className="h-11 w-auto"
+            className="h-9 w-auto sm:h-10 lg:h-11"
           />
         </Link>
 
@@ -297,13 +346,108 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <Link
-          href="/contact/"
-          className="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#18bdb1] px-5 text-sm font-semibold text-white transition hover:bg-brand-navy lg:hidden"
-        >
-          Get started
-        </Link>
+        <div className="ml-auto flex items-center gap-2 lg:hidden">
+          <Link
+            href="/contact/"
+            className="hidden min-h-11 items-center justify-center rounded-lg bg-[#18bdb1] px-4 text-sm font-semibold text-white transition hover:bg-brand-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy sm:inline-flex"
+          >
+            Get started
+          </Link>
+          <button
+            ref={menuTriggerRef}
+            type="button"
+            className="mobile-menu-trigger"
+            aria-label="Open navigation"
+            aria-controls="mobile-navigation"
+            aria-expanded={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <MenuIcon />
+          </button>
+        </div>
       </nav>
+
+      {isMobileMenuOpen ? (
+        <div className="mobile-navigation-layer lg:hidden">
+          <button
+            type="button"
+            className="mobile-navigation-backdrop"
+            aria-label="Close navigation"
+            onClick={() => closeMobileMenu({ restoreFocus: true })}
+          />
+          <div
+            ref={menuPanelRef}
+            id="mobile-navigation"
+            className="mobile-navigation-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-navigation-title"
+          >
+            <div className="mobile-navigation-header">
+              <div>
+                <p className="mobile-navigation-eyebrow">Menu</p>
+                <h2 id="mobile-navigation-title">Explore CommsCloud</h2>
+              </div>
+              <button
+                type="button"
+                className="mobile-navigation-close"
+                aria-label="Close navigation"
+                onClick={() => closeMobileMenu({ restoreFocus: true })}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+
+            <div className="mobile-navigation-content">
+              {navigation.map((item) => (
+                <section key={item.href} className="mobile-navigation-group">
+                  <Link
+                    href={item.href}
+                    className="mobile-navigation-primary"
+                    onClick={() => closeMobileMenu()}
+                  >
+                    {item.label}
+                    <span aria-hidden="true">↗</span>
+                  </Link>
+                  <div className="mobile-navigation-links">
+                    {item.sections.map((section) => (
+                      <div key={section.title} className="contents">
+                        {section.items.map((menuItem) => (
+                          <Link
+                            key={menuItem.href}
+                            href={menuItem.href}
+                            onClick={() => closeMobileMenu()}
+                          >
+                            {menuItem.label.replace(/\s+/g, " ")}
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+                    {item.aside.items.map((asideItem) => (
+                      <Link
+                        key={asideItem.href}
+                        href={asideItem.href}
+                        onClick={() => closeMobileMenu()}
+                      >
+                        {asideItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            <div className="mobile-navigation-actions">
+              <Link href="/contact/" onClick={() => closeMobileMenu()}>
+                Contact
+              </Link>
+              <Link href="/contact/" onClick={() => closeMobileMenu()}>
+                Get started
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
@@ -441,5 +585,20 @@ function MegaMenuIcon({ name }: { name: MenuIconName }) {
       height={48}
       className={`mega-menu-icon-image ${name === "dashboard" ? "translate-x-px" : ""}`}
     />
+  );
+}
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m6 6 12 12M18 6 6 18" />
+    </svg>
   );
 }
